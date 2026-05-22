@@ -1,0 +1,264 @@
+services:
+
+  # Servicios de red y DNS
+  adguardhome:
+    extends:
+      file: ./adguardhome/docker-compose.yml
+      service: adguardhome
+    networks:
+      temp2010:
+        ipv4_address: ${ADGUARDHOME_IP}
+    depends_on: []
+
+  dhcp:
+    extends:
+      file: ./dhcp/docker-compose.yml
+      service: dhcp
+    depends_on: []
+
+  cloudflared:
+    extends:
+      file: ./cloudflared/docker-compose.yml
+      service: cloudflared
+    depends_on: []
+
+  # Servicios de almacenamiento y archivos
+  filebrowser:
+    extends:
+      file: ./filebrowser/docker-compose.yml
+      service: filebrowser
+    networks:
+      temp2010:
+        ipv4_address: ${FILEBROWSER_IP}
+    depends_on: []
+
+  samba:
+    extends:
+      file: ./samba/docker-compose.yml
+      service: samba
+    depends_on: []
+
+  cups:
+    extends:
+      file: ./cups/docker-compose.yml
+      service: cups
+    networks:
+      temp2010:
+        ipv4_address: ${CUPS_IP}
+    depends_on: []
+
+  wsdd:
+    extends:
+      file: ./wsdd/docker-compose.yml
+      service: wsdd
+    depends_on: []
+
+  driveone:
+    extends:
+      file: ./driveone/docker-compose.yml
+      service: driveone
+    networks:
+      temp2010:
+        ipv4_address: ${ABRAUNEGG_IP}
+    depends_on: []
+
+  # Servicios de gestión y dashboard
+  heimdall:
+    extends:
+      file: ./heimdall/docker-compose.yml
+      service: heimdall
+    networks:
+      temp2010:
+        ipv4_address: ${HEIMDALL_IP}
+    depends_on: []
+
+  portainer:
+    extends:
+      file: ./portainer/docker-compose.yml
+      service: portainer
+    networks:
+      temp2010:
+        ipv4_address: ${PORTAINER_IP}
+    depends_on: []
+
+  watchtower:
+    extends:
+      file: ./watchtower/docker-compose.yml
+      service: watchtower
+    networks:
+      temp2010:
+        ipv4_address: ${WATCHTOWER_IP}
+    depends_on: []
+
+  casaos:
+    extends:
+      file: ./casaos/docker-compose.yml
+      service: casaos
+    networks:
+      temp2010:
+        ipv4_address: ${CASAOS_IP}
+    depends_on: []
+
+  # Servicios de automatización del hogar
+  homeassistant:
+    extends:
+      file: ./homeassistant/docker-compose.yml
+      service: homeassistant
+    depends_on: []
+
+  # Servicios multimedia
+  jellyfin:
+    extends:
+      file: ./jellyfin/docker-compose.yml
+      service: jellyfin
+    depends_on: []
+
+  plex:
+    extends:
+      file: ./plex/docker-compose.yml
+      service: plex
+    depends_on: []
+
+  #Escritorio remoto
+  rustdesk-hbbr:
+    extends:
+      file: ./rustdesk/docker-compose.yml
+      service: hbbr
+    depends_on: []
+
+  rustdesk-hbbs:
+    extends:
+      file: ./rustdesk/docker-compose.yml
+      service: hbbs
+    depends_on: []
+
+  # Servicios de red y proxy
+  nginx:
+    extends:
+      file: ./nginx/docker-compose.yml
+      service: nginx
+    networks:
+      temp2010:
+        ipv4_address: ${NGINX_IP}
+    depends_on: []
+
+  noip:
+    extends:
+      file: ./noip/docker-compose.yml
+      service: noip-duc
+    networks:
+      temp2010:
+        ipv4_address: ${NOIP_IP}
+    depends_on: []
+
+  wireguard:
+    extends:
+      file: ./wireguard/docker-compose.yml
+      service: wg-easy
+    depends_on: []
+
+  mitmproxy:
+    extends:
+      file: ./mitmproxy/docker-compose.yml
+      service: mitmproxy
+    depends_on: []
+
+  # Servicios de base de datos
+  postgres:
+    extends:
+      file: ./postgres/docker-compose.yml
+      service: postgres
+    networks:
+      temp2010:
+        ipv4_address: ${POSTGRES_IP}
+    depends_on: []
+
+  phpmyadmin:
+    extends:
+      file: ./phpmyadmin/docker-compose.yml
+      service: phpmyadmin
+    networks:
+      temp2010:
+        ipv4_address: ${PHPMYADMIN_IP}
+    depends_on: []
+
+  # Servicios de descarga
+  pyload:
+    extends:
+      file: ./pyLoad/docker-compose.yml
+      service: pyload
+    networks:
+      temp2010:
+        ipv4_address: ${PYLOAD_IP}
+    depends_on: []
+
+  metube:
+    extends:
+      file: ./metube/docker-compose.yml
+      service: metube
+    networks:
+      temp2010:
+        ipv4_address: ${METUBE_IP}
+    depends_on: []
+
+  # IA
+  ollama:
+    extends:
+      file: ./ollama/docker-compose.yml
+      service: ollama
+    networks:
+      temp2010:
+        ipv4_address: ${OLLAMA_IP}
+    depends_on: []
+
+  openwebui:
+    extends:
+      file: ./ollama/docker-compose.yml
+      service: openwebui
+    networks:
+      temp2010:
+        ipv4_address: ${OPENWEBUI_IP}
+    depends_on:
+      - ollama
+
+  n8n:
+    extends:
+      file: ./n8n/docker-compose.yml
+      service: n8n
+    networks:
+      temp2010:
+        ipv4_address: ${N8N_IP}
+    depends_on:
+      - postgres
+
+  openclaw-gateway:
+    extends:
+      file: ./openclaw/docker-compose.yml
+      service: openclaw-gateway
+    networks:
+      temp2010:
+        ipv4_address: ${OPENCLAW_IP}
+    depends_on: []
+
+  openclaw:
+    extends:
+      file: ./openclaw/docker-compose.yml
+      service: openclaw
+    depends_on:
+      - openclaw-gateway
+
+  # ERP
+  odoo:
+    extends:
+      file: ./odoo/docker-compose.yml
+      service: odoo
+    networks:
+      temp2010:
+        ipv4_address: ${ODOO_IP}
+    depends_on: []
+
+networks:
+  temp2010:
+    external: true
+  wordpress:
+    external: true

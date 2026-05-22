@@ -1,0 +1,58 @@
+# Volumenes y datos
+volumes/
+data/
+adguardhome/
+dhcp/
+filebrowser/
+heimdall/
+jellyfin/
+homeassistant/
+metube/
+portainer/
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+logs/
+*.out
+
+# Temporales
+*.tmp
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Ambiente sensible
+.env.local
+.env.*.local
+
+# Docker
+.docker/
+.dockerignore
+
+# Otros
+node_modules/
+backup/
+.claude/
+
+# Archivos de compilación
+dist/
+build/
+*.o
+*.a
+*.so
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.iml
+
+# Sistema
+.DS_Store
+.AppleDouble
+.LSOverride
