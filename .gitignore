@@ -30,6 +30,8 @@ Thumbs.db
 .env
 .env.local
 .env.*.local
+GIT-INFO.txt
+*.save
 
 # Docker (pero permitir docker-compose.yml)
 .docker/
@@ -39,6 +41,16 @@ Thumbs.db
 node_modules/
 backup/
 .claude/
+
+# openclaw: excluir subdirectorios grandes (incluir solo archivos esenciales via reglas específicas más adelante)
+openclaw/*
+!openclaw/docker-compose.yml
+!openclaw/Dockerfile
+!openclaw/Dockerfile.*
+!openclaw/.dockerignore
+!openclaw/docker-setup.sh
+!openclaw/setup-podman.sh
+!openclaw/.env.example
 
 # Archivos de compilación
 dist/
@@ -60,6 +72,19 @@ build/
 # PERMITIR docker-compose files en subcarpetas
 !*/docker-compose.yml
 !*/docker-compose.yaml
+
+# PERMITIR archivos necesarios para construcción personalizada
+!*/Dockerfile
+!*/Dockerfile.*
+!*/entrypoint.sh
+!*/install.sh
+!*.env.example
+
+# PERMITIR archivos de configuración críticos
+!*/.dockerignore
+!*/docker-setup.sh
+!*/setup-podman.sh
+!*/config/.gitkeep
 
 # Excluir carpetas pero permitir archivos específicos
 !/adguardhome/docker-compose.yml
