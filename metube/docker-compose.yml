@@ -1,0 +1,20 @@
+services:
+  metube:
+    image: alexta69/metube:latest
+    container_name: metube
+    hostname: metube
+    ports:
+      - "9091:8081"
+    volumes:
+      - /mnt/hdd/Videos/Musicales:/downloads
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - DOWNLOAD_DIR=/downloads
+      - STATE_DIR=/downloads/.metube
+      - DELETE_FILE_ON_TRASHCAN=true
+    dns:
+      - ${DNS_PRIMARY}
+      - ${DNS_SECONDARY}

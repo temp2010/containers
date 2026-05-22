@@ -1,0 +1,22 @@
+services:
+  wg-easy:
+    image: ghcr.io/wg-easy/wg-easy
+    container_name: wireguard
+    hostname: wireguard
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - PASSWORD_HASH=$$2b$$12$$GXOsF3y9K4WWFfwpsqsEy.5.7AxsUY9EvFPP5xNeOkzS6GQMPBhjG
+      - WG_HOST=temp2010.ddns.net:8020
+      - WG_DEFAULT_ADDRESS=10.8.0.x
+      - WG_DEFAULT_DNS=192.168.83.22
+      - TZ=${TZ}
+    dns:
+      - ${DNS_PRIMARY}
+      - ${DNS_SECONDARY}
+    volumes:
+      - ./config:/etc/wireguard
+      - /lib/modules:/lib/modules
+    network_mode: host
+    restart: unless-stopped

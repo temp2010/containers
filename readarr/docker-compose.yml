@@ -1,0 +1,20 @@
+services:
+  readarr:
+    image: ghcr.io/hotio/readarr:testing
+    platform: linux/arm64
+    container_name: readarr
+    hostname: readarr
+    ports:
+      - "8787:8787"
+    volumes:
+      - ./config:/config
+      - ~/Downloads:/downloads
+      - /mnt/hdd/libros:/books
+    dns:
+      - ${DNS_PRIMARY}
+      - ${DNS_SECONDARY}
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    restart: unless-stopped

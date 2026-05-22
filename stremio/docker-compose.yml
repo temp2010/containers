@@ -1,0 +1,17 @@
+services:
+  stremio:
+    image: stremio/server:latest
+    container_name: stremio-server
+    hostname: stremio-server
+    restart: unless-stopped
+    ports:
+      - "11470:11470"
+    volumes:
+      - ./stremio-data:/root/.stremio-server
+    environment:
+      - TZ=${TZ}
+    dns:
+      - ${DNS_PRIMARY}
+      - ${DNS_SECONDARY}
+    devices:
+      - /dev/dri:/dev/dri

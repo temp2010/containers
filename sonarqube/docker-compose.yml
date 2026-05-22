@@ -1,0 +1,19 @@
+services:
+  sonarqube:
+    image: sonarqube:community
+    container_name: sonarqube
+    hostname: sonarqube
+    restart: unless-stopped
+    ports:
+      - 9001:9000
+    environment:
+      - SONAR_JDBC_URL=jdbc:postgresql://postgres:5432/sonar
+      - SONAR_JDBC_USERNAME=${ADMIN_USER}
+      - SONAR_JDBC_PASSWORD=${ADMIN_PASSWORD}
+      - TZ=${TZ}
+    volumes:
+      - ./data:/opt/sonarqube/data
+      - ./extensions:/opt/sonarqube/extensions
+    dns:
+      - ${DNS_PRIMARY}
+      - ${DNS_SECONDARY}

@@ -1,0 +1,19 @@
+services:
+  nginx:
+    image: nginx
+    container_name: nginx
+    hostname: nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./conf.d:/etc/nginx/conf.d:ro
+      - ./html:/usr/share/nginx/html:ro
+      - ./certs:/etc/nginx/certs:ro
+      - ./logs:/var/log/nginx
+    environment:
+      - TZ=${TZ}
+    dns:
+      - ${DNS_PRIMARY}
+      - ${DNS_SECONDARY}

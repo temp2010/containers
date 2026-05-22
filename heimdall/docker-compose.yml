@@ -1,0 +1,17 @@
+services:
+  heimdall:
+    container_name: heimdall
+    image: linuxserver/heimdall
+    hostname: heimdall
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    ports:
+      - "3002:80"
+    volumes:
+      - ./config:/config
+    dns:
+      - ${DNS_PRIMARY}
+      - ${DNS_SECONDARY}

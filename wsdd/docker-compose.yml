@@ -1,0 +1,13 @@
+services:
+  wsdd:
+    image: thkukuk/wsdd
+    container_name: wsdd
+    hostname: wsdd
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      TZ: ${TZ}
+    dns:
+      - ${DNS_PRIMARY}
+      - ${DNS_SECONDARY}
+    command: --hostname raspberrypi --interface end0

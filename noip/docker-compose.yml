@@ -1,0 +1,14 @@
+services:
+  noip-duc:
+    image: ghcr.io/noipcom/noip-duc:latest
+    container_name: noip-duc
+    hostname: noip-duc
+    env_file:
+      - noip-duc.env
+    dns:
+      - ${DNS_PRIMARY}
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}

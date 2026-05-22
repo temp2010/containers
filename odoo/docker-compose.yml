@@ -1,0 +1,21 @@
+services:
+  odoo:
+    image: odoo:latest
+    container_name: odoo
+    hostname: odoo
+    restart: unless-stopped
+    ports:
+      - "8069:8069"
+    volumes:
+      - ./data:/var/lib/odoo
+      - ./addons:/mnt/extra-addons
+    environment:
+      - HOST=postgres
+      - USER=odoo
+      - PASSWORD=${ADMIN_PASSWORD}
+      - DATABASE=odoo
+      - ADMIN_PASSWD=${ADMIN_PASSWORD}
+      - TZ=${TZ}
+    dns:
+      - ${DNS_PRIMARY}
+      - ${DNS_SECONDARY}

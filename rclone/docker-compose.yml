@@ -1,0 +1,29 @@
+services:
+  rclone-bookworm:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rclone-bookworm
+    hostname: rclone-bookworm
+    cap_add:
+      - SYS_ADMIN
+    devices:
+      - /dev/fuse
+    security_opt:
+      - apparmor:unconfined
+    volumes:
+      - ./config:/root/.config/rclone
+      - /mnt/gdrive/temp2010:/mnt/gdrive/temp2010:shared
+      - /mnt/gdrive/temp2010g:/mnt/gdrive/temp2010g:shared
+      - /mnt/onedrive/temp2010:/mnt/onedrive/temp2010:shared
+      - ./entrypoint.sh:/entrypoint.sh
+      - ./install.sh:/install.sh
+    dns:
+      - ${DNS_PRIMARY}
+      - ${DNS_SECONDARY}
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    entrypoint: ["/entrypoint.sh"]

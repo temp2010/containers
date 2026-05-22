@@ -1,0 +1,24 @@
+services:
+  hbbs:
+    container_name: hbbs
+    hostname: hbbs
+    image: rustdesk/rustdesk-server:latest
+    command: hbbs
+    volumes:
+      - ./data:/root
+    environment:
+      - TZ=${TZ}
+    network_mode: "host"
+    restart: unless-stopped
+
+  hbbr:
+    container_name: hbbr
+    hostname: hbbr
+    image: rustdesk/rustdesk-server:latest
+    command: hbbr
+    volumes:
+      - ./data:/root
+    environment:
+      - TZ=${TZ}
+    network_mode: "host"
+    restart: unless-stopped

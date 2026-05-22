@@ -1,0 +1,14 @@
+services:
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./cloudflared:/etc/cloudflared
+    command: ["tunnel", "--no-autoupdate", "run", "--token", "${CLOUDFLARED_CLAIM}"]
+    environment:
+      - TZ=${TZ}
+    dns:
+      - ${DNS_PRIMARY}
+      - ${DNS_SECONDARY}

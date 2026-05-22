@@ -1,0 +1,16 @@
+services:
+  driveone:
+    image: driveone/onedrive
+    container_name: driveone
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    volumes:
+      - ./config:/onedrive/config
+      - /home/jopena/temp2:/onedrive/data
+    command: --upload-only --verbose
+    dns:
+      - ${DNS_PRIMARY}
+      - ${DNS_SECONDARY}

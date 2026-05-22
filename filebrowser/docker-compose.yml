@@ -1,0 +1,21 @@
+services:
+  filebrowser:
+    image: filebrowser/filebrowser:latest
+    container_name: filebrowser
+    hostname: filebrowser
+    ports:
+      - "8095:80"
+    volumes:
+      - ./config:/config
+      - ./database:/database
+      - /mnt/hdd/Backups:/srv/Copias
+      - /mnt/hdd/Videos/Familiares:/srv/Videos
+      - /home/jopena/Downloads:/srv/Descargas
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    dns:
+      - ${DNS_PRIMARY}
+      - ${DNS_SECONDARY}
+    restart: unless-stopped

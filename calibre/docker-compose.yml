@@ -1,0 +1,19 @@
+services:
+  calibre-web:
+    image: lscr.io/linuxserver/calibre-web:latest
+    container_name: calibre-web
+    hostname: calibre-web
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - DOCKER_MODS=linuxserver/mods:universal-calibre
+    volumes:
+      - ./config:/config
+      - /mnt/hdd/libros:/books
+    ports:
+      - 8083:8083
+    dns:
+      - ${DNS_PRIMARY}
+      - ${DNS_SECONDARY}
+    restart: unless-stopped

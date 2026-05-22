@@ -1,4 +1,4 @@
-# Volumenes y datos
+# Volumenes y datos (EXCLUIR)
 volumes/
 data/
 adguardhome/
@@ -27,10 +27,11 @@ logs/
 Thumbs.db
 
 # Ambiente sensible
+.env
 .env.local
 .env.*.local
 
-# Docker
+# Docker (pero permitir docker-compose.yml)
 .docker/
 .dockerignore
 
@@ -53,6 +54,54 @@ build/
 *.iml
 
 # Sistema
-.DS_Store
 .AppleDouble
 .LSOverride
+
+# PERMITIR docker-compose files en subcarpetas
+!*/docker-compose.yml
+!*/docker-compose.yaml
+
+# Excluir carpetas pero permitir archivos específicos
+!/adguardhome/docker-compose.yml
+!/avahi/docker-compose.yml
+!/calibre/docker-compose.yml
+!/casaos/docker-compose.yml
+!/cloudflared/docker-compose.yml
+!/cups/docker-compose.yml
+!/dhcp/docker-compose.yml
+!/driveone/docker-compose.yml
+!/filebrowser/docker-compose.yml
+!/heimdall/docker-compose.yml
+!/homeassistant/docker-compose.yml
+!/jellyfin/docker-compose.yml
+!/mattermost/docker-compose.yml
+!/metube/docker-compose.yml
+!/minecraft/docker-compose.yml
+!/mitmproxy/docker-compose.yml
+!/mongodb/docker-compose.yml
+!/mysql/docker-compose.yml
+!/n8n/docker-compose.yml
+!/nextcloud/docker-compose.yml
+!/nginx/docker-compose.yml
+!/noip/docker-compose.yml
+!/odoo/docker-compose.yml
+!/ollama/docker-compose.yml
+!/openclaw/docker-compose.yml
+!/phpmyadmin/docker-compose.yml
+!/plex/docker-compose.yml
+!/portainer/docker-compose.yml
+!/postgres/docker-compose.yml
+!/prowlarr/docker-compose.yml
+!/pyLoad/docker-compose.yml
+!/qbittorrent/docker-compose.yml
+!/radarr/docker-compose.yml
+!/rclone/docker-compose.yml
+!/readarr/docker-compose.yml
+!/redis/docker-compose.yml
+!/rustdesk/docker-compose.yml
+!/samba/docker-compose.yml
+!/sonarqube/docker-compose.yml
+!/stremio/docker-compose.yml
+!/watchtower/docker-compose.yml
+!/wireguard/docker-compose.yml
+!/wsdd/docker-compose.yml

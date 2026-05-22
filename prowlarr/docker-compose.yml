@@ -1,0 +1,17 @@
+services:
+  prowlarr:
+    image: linuxserver/prowlarr
+    container_name: prowlarr
+    hostname: prowlarr
+    ports:
+      - "9696:9696"
+    volumes:
+      - ./config:/config
+    dns:
+      - ${DNS_PRIMARY}
+      - ${DNS_SECONDARY}
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    restart: unless-stopped

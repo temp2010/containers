@@ -1,0 +1,17 @@
+services:
+  samba:
+    image: dperson/samba
+    container_name: samba
+    hostname: raspberry
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      TZ: ${TZ}
+    volumes:
+      - /mnt/hdd:/mnt/hdd
+      - /home/jopena:/mnt/home
+    command: >
+      -u "jopena;hamlet"
+      -s "HDD;/mnt/hdd;yes;yes;no;jopena"
+      -s "jopena;/mnt/home;yes;yes;no;jopena"
+      -n

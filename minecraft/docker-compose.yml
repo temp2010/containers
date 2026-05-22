@@ -1,0 +1,21 @@
+services:
+  minecraft-bedrock:
+    image: itzg/minecraft-bedrock-server
+    container_name: minecraft-bedrock
+    hostname: minecraft-bedrock
+    ports:
+      - "19132:19132/udp"
+    volumes:
+      - ./data:/data
+    environment:
+      EULA: "TRUE"
+      GAMEMODE: survival
+      DIFFICULTY: normal
+      SERVER_NAME: "Servidor de José"
+      MAX_PLAYERS: 10
+      ONLINE_MODE: "true"
+      TZ: ${TZ}
+    dns:
+      - ${DNS_PRIMARY}
+      - ${DNS_SECONDARY}
+    restart: unless-stopped

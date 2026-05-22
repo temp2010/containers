@@ -1,0 +1,18 @@
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    hostname: jellyfin
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./config:/config
+      - /mnt/hdd/Peliculas:/media/movies
+      - /mnt/hdd/Series:/media/shows
+      - /mnt/hdd/Musica:/media/music
+      - /mnt/hdd/Videos:/media/videos
+    environment:
+      - TZ=${TZ}
+    dns:
+      - ${DNS_PRIMARY}
+      - ${DNS_SECONDARY}

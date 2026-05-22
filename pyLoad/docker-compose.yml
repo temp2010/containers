@@ -1,0 +1,18 @@
+services:
+  pyload:
+    image: linuxserver/pyload-ng
+    container_name: pyload
+    hostname: pyload
+    restart: unless-stopped
+    ports:
+      - 8000:8000
+    volumes:
+      - ./pyload/config:/config
+      - /home/jopena/Downloads:/downloads
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    dns:
+      - ${DNS_SECONDARY}
+      - ${DNS_PRIMARY}

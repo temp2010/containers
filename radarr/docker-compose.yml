@@ -1,0 +1,19 @@
+services:
+  radarr:
+    image: linuxserver/radarr
+    container_name: radarr
+    hostname: radarr
+    ports:
+      - "7878:7878"
+    volumes:
+      - ./config:/config
+      - ~/Downloads:/downloads
+      - /mnt/hdd/Peliculas:/movies
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    dns:
+      - ${DNS_PRIMARY}
+      - ${DNS_SECONDARY}
+    restart: unless-stopped

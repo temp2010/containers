@@ -1,0 +1,19 @@
+services:
+  dhcp:
+    image: networkboot/dhcpd:latest
+    container_name: dhcp
+    hostname: dhcp
+    restart: unless-stopped
+    network_mode: host
+    command: ["${DHCP_INTERFACE:-eth0}"]
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    volumes:
+      - ./data:/data
+      - ./config/dhcpd.conf:/data/dhcpd.conf:ro
+    environment:
+      TZ: ${TZ}
+    dns:
+      - ${DNS_ADGUARD}
+      - ${DNS_SECONDARY}

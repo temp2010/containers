@@ -1,0 +1,17 @@
+services:
+  avahi:
+    image: ghcr.io/alsuren/avahi-daemon:latest
+    container_name: avahi
+    hostname: avahi
+    network_mode: host
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    volumes:
+      - ./config:/etc/avahi
+    environment:
+      - TZ=${TZ}
+    dns:
+      - ${DNS_PRIMARY}
+      - ${DNS_SECONDARY}

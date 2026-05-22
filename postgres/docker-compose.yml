@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    hostname: postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_PASSWORD=${ADMIN_PASSWORD}
+      - TZ=${TZ}
+    dns:
+      - ${DNS_PRIMARY}
+      - ${DNS_SECONDARY}
+    volumes:
+      - ./data:/var/lib/postgresql
+      - ./config:/etc/postgresql/conf.d:ro
+    ports:
+      - "5432:5432"

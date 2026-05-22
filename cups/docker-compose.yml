@@ -1,0 +1,21 @@
+services:
+  cups:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: temp2010-cups:local
+    container_name: cups
+    hostname: cups
+    restart: unless-stopped
+    ports:
+      - "631:631"
+    env_file:
+      - ../.env
+    volumes:
+      - ./config:/etc/cups
+      - ./spool:/var/spool/cups
+      - /var/run/dbus:/var/run/dbus
+    # Variables tomadas de ../.env (ADMIN_USER, ADMIN_PASSWORD, TZ, etc.)
+    devices:
+      - /dev/bus/usb:/dev/bus/usb
+    privileged: true

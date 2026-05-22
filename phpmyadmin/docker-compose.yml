@@ -1,0 +1,15 @@
+services:
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: phpmyadmin
+    hostname: phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8084:80"
+    environment:
+      - TZ=${TZ}
+      - PMA_HOST=mysql
+      - PMA_PORT=3306
+    dns:
+      - ${DNS_PRIMARY}
+      - ${DNS_SECONDARY}
