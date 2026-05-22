@@ -1,0 +1,87 @@
+╔════════════════════════════════════════════════════════════════════════╗
+║                      BACKUP DE CONFIGURACIÓN                           ║
+║              Red Local: 192.168.83.0/24 + AdGuard Home                ║
+╚════════════════════════════════════════════════════════════════════════╝
+
+📁 CONTENIDO DEL BACKUP:
+├─ iptables-current.rules        = Reglas IPv4 activas (13KB)
+├─ ip6tables-current.rules       = Reglas IPv6 activas (850B)
+├─ restore-iptables.sh           = Script para restaurar reglas
+├─ REGLAS-VPN-BLOQUEO.txt        = Documentación de políticas
+├─ INSTRUCCIONES.txt             = Este archivo
+├─ AdGuardHome-config.yaml       = Config de AdGuard Home
+├─ dhcpd.conf.bak                = Config del servidor DHCP
+└─ opt/                           = Copia de /opt/adguardhome (completa)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ REGLAS ACTIVAS APLICADAS:
+
+1. BLOQUEO VPN para IPs SIN RESERVA (192.168.83.51-254):
+   ├─ OpenVPN (1194 TCP/UDP)
+   ├─ IPSec (500, 4500 UDP)
+   ├─ WireGuard (51820 UDP)
+   ├─ DoT DNS (853 TCP/UDP)
+   ├─ DoH DNS (443 con inspección)
+   ├─ Shadowsocks (8388 TCP/UDP)
+   ├─ SOCKS5 Proxy (1080 TCP/UDP)
+   ├─ Cloudflare Túnel (172.67/104.21/104.18 ranges)
+   └─ Opera VPN (185.194.168/172.0/22 ranges)
+
+2. POLÍTICA DE IPs:
+   ├─ 192.168.83.1-50   = PERMITIDAS (admin/reservadas)
+   ├─ 192.168.83.51-254 = BLOQUEADAS VPN (clientes dinámicos)
+   └─ 192.168.83.139    = Tablet monitoreada
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔧 CÓMO RESTAURAR LAS REGLAS:
+
+Si necesitas restaurar toda la configuración:
+
+  cd /home/jopena/containers/backup
+  sudo ./restore-iptables.sh
+
+O manualmente:
+
+  sudo iptables-restore < iptables-current.rules
+  sudo ip6tables-restore < ip6tables-current.rules
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📊 VERIFICAR ESTADO ACTUAL:
+
+Ver todas las reglas DROP activas:
+  sudo iptables -L FORWARD -n | grep DROP
+
+Ver reglas específicas de bloqueo de puertos:
+  sudo iptables -L FORWARD -n | grep "192.168.83.5[1-9]\|ssl\|dpt"
+
+Contar total de reglas:
+  sudo iptables -L FORWARD -n | grep DROP | wc -l
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ NOTAS IMPORTANTES:
+
+1. Cloudflared tunnel MANTIENE acceso remoto para admin
+   (No está bloqueado, solo para clientes sin reserva)
+
+2. Las reglas se aplican al reinicio SOLO si usas:
+   - systemd-iptables (Debian/Ubuntu)
+   - O ejecutas restore-iptables.sh al arrancar
+
+3. Para persistencia automática en Debian/Ubuntu:
+   sudo apt install iptables-persistent
+   sudo netfilter-persistent save
+
+4. Para reverter cambios:
+   sudo iptables -F FORWARD
+   sudo iptables -F INPUT
+   (Cuidado: esto limpia TODAS las reglas)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📅 CREADO: 2026-05-14 20:30 UTC
+📍 UBICACIÓN: /home/jopena/containers/backup/
+🔒 PERMISOS: 755 (ejecutable)

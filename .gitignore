@@ -39,8 +39,13 @@ GIT-INFO.txt
 
 # Otros
 node_modules/
-backup/
 .claude/
+
+# backup: excluir archivos de respaldo pero permitir documentación importante
+backup/*
+!backup/REGLAS-VPN-BLOQUEO.txt
+!backup/INSTRUCCIONES.txt
+!backup/restore-iptables.sh
 
 # openclaw: excluir subdirectorios grandes (incluir solo archivos esenciales via reglas específicas más adelante)
 openclaw/*

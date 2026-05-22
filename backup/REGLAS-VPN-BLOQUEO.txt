@@ -1,0 +1,40 @@
+========================================
+REGLAS DE BLOQUEO VPN - RED LOCAL 192.168.83.0/24
+========================================
+
+OBJETIVO:
+- Bloquear VPN y proxies para clientes SIN IP RESERVADA (IPs >50)
+- Permitir acceso administrativo para IPs reservadas (1-50)
+- Mantener Cloudflare túnel funcional para acceso remoto autorizado
+
+POLÍTICA DE IPS:
+├─ 192.168.83.1-50   = IPs RESERVADAS/ADMIN (permitidas)
+└─ 192.168.83.51-254 = IPs DINÁMICAS/CLIENTES (bloqueadas VPN)
+
+PUERTOS BLOQUEADOS para clientes >.50:
+├─ OpenVPN: 1194 (TCP/UDP)
+├─ IPSec: 500, 4500 (UDP)
+├─ WireGuard: 51820 (UDP)
+├─ DoT (DNS over TLS): 853 (TCP/UDP)
+├─ DoH (DNS over HTTPS): 443 (con inspección de contenido)
+├─ Shadowsocks: 8388 (TCP/UDP)
+├─ SOCKS5 Proxy: 1080 (TCP/UDP)
+├─ Cloudflare Túnel: 172.67.0.0/16, 104.21.0.0/16, 104.18.0.0/15
+└─ Opera VPN (específico): 185.194.168.0/22, 185.194.172.0/22
+
+ESPECIAL - Opera VPN:
+Opera integra VPN propia. Se bloquean sus rangos IP conocidos.
+
+CÓMO RESTAURAR REGLAS:
+  sudo iptables-restore < /home/jopena/containers/backup/iptables-current.rules
+  sudo ip6tables-restore < /home/jopena/containers/backup/ip6tables-current.rules
+
+CÓMO PERSISTIR (systemd):
+  sudo bash -c 'iptables-save > /etc/iptables/rules.v4'
+  sudo bash -c 'ip6tables-save > /etc/iptables/rules.v6'
+
+VERIFICAR REGLAS ACTIVAS:
+  sudo iptables -L FORWARD -n | grep DROP
+  sudo iptables -L INPUT -n | grep DROP
+
+VERSIÓN: 2026-05-14
