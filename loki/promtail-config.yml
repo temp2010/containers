@@ -1,0 +1,54 @@
+server:
+  http_listen_port: 9080
+  log_level: info
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  # Docker containers logs
+  - job_name: docker
+    static_labels:
+      job: docker
+      env: ${ENVIRONMENT:-production}
+    docker:
+      host: unix:///var/run/docker.sock
+      labels:
+        container_name: container_name
+        image_name: image_name
+    relabel_configs:
+      - source_labels: ['__meta_docker_container_name']
+        target_label: 'container'
+      - source_labels: ['__meta_docker_container_label_service_name']
+        target_label: 'service'
+      - source_labels: ['__meta_docker_container_label_com_docker_compose_service']
+        target_label: 'compose_service'
+      - source_labels: ['__meta_docker_container_id']
+        target_label: 'container_id'
+
+  # System logs from /var/log
+  - job_name: syslog
+    static_labels:
+      job: syslog
+      env: ${ENVIRONMENT:-production}
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          __path__: /var/log/syslog
+          job: syslog
+
+  # Alternative: journald logs (if using systemd)
+  # - job_name: journal
+  #   journal:
+  #     max_age: 24h
+  #     labels:
+  #       job: systemd-journal
+  #   relabel_configs:
+  #     - source_labels: ['__journal__systemd_unit']
+  #       target_label: 'unit'
+  #     - source_labels: ['__journal_priority']
+  #       target_label: 'level'

@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    hostname: grafana
+    restart: unless-stopped
+    ports:
+      - "${GRAFANA_PORT:-3000}:3000"
+    volumes:
+      - grafana-storage:/var/lib/grafana
+      - ./provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./provisioning/datasources:/etc/grafana/provisioning/datasources
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-admin}
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:-admin}
+      - GF_INSTALL_PLUGINS=grafana-worldmap-panel,grafana-piechart-panel
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SERVER_ROOT_URL=http://${DOMAIN:-localhost}:${GRAFANA_PORT:-3000}
+      - GF_SMTP_ENABLED=${GRAFANA_SMTP_ENABLED:-false}
+      - GF_SMTP_HOST=${GRAFANA_SMTP_HOST:-}
+      - GF_SMTP_PORT=${GRAFANA_SMTP_PORT:-587}
+      - GF_SMTP_USER=${GRAFANA_SMTP_USER:-}
+      - GF_SMTP_PASSWORD=${GRAFANA_SMTP_PASSWORD:-}
+      - TZ=${TZ:-UTC}
+    networks:
+      - default
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  grafana-storage:
+    driver: local

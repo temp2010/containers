@@ -1,0 +1,72 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: 'containers-stack'
+    environment: '${ENVIRONMENT:-production}'
+
+# Configurar servidor de alertas (AlertManager)
+# alerting:
+#   alertmanagers:
+#     - static_configs:
+#         - targets:
+#             - alertmanager:9093
+
+# Cargar reglas de alertas
+rule_files:
+  - 'alert-rules.yml'
+
+scrape_configs:
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Node Exporter - Métricas del host (opcional, si quieres monitorear Raspberry Pi)
+  # Primero debes iniciar node-exporter: docker run -d --net=host prom/node-exporter
+  # - job_name: 'node'
+  #   static_configs:
+  #     - targets: ['localhost:9100']
+
+  # Docker Daemon - Métricas de contenedores
+  # Requiere acceso a /var/run/docker.sock
+  # - job_name: 'docker'
+  #   static_configs:
+  #     - targets: ['localhost:9323']
+
+  # Otros servicios con endpoints de métricas
+  # Descomenta según sea necesario:
+
+  # Nginx - si tienes nginx-prometheus-exporter
+  # - job_name: 'nginx'
+  #   static_configs:
+  #     - targets: ['nginx-exporter:9113']
+
+  # PostgreSQL - si tienes postgres-exporter
+  # - job_name: 'postgres'
+  #   static_configs:
+  #     - targets: ['postgres-exporter:9187']
+  #   relabel_configs:
+  #     - source_labels: [__address__]
+  #       target_label: instance
+
+  # MongoDB - si tienes mongodb-exporter
+  # - job_name: 'mongodb'
+  #   static_configs:
+  #     - targets: ['mongodb-exporter:9216']
+
+  # Redis - si tienes redis-exporter
+  # - job_name: 'redis'
+  #   static_configs:
+  #     - targets: ['redis-exporter:9121']
+
+  # Caddy/Nginx Logs - si usas log exporter
+  # - job_name: 'caddy'
+  #   static_configs:
+  #     - targets: ['caddy-exporter:9193']
+
+  # AdGuard Home - Si tienes metrics endpoint
+  # - job_name: 'adguard'
+  #   static_configs:
+  #     - targets: ['adguardhome:3000']
+  #   metrics_path: '/control/stats'

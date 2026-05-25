@@ -91,6 +91,15 @@ build/
 !*/setup-podman.sh
 !*/config/.gitkeep
 
+# PERMITIR configuraciones de Prometheus, Grafana, Loki, Restic
+!prometheus/prometheus.yml
+!prometheus/alert-rules.yml
+!grafana/provisioning/
+!loki/loki-config.yml
+!loki/promtail-config.yml
+!restic/restic-backup.sh
+!restic/restic-restore.sh
+
 # Excluir carpetas pero permitir archivos específicos
 !/adguardhome/docker-compose.yml
 !/avahi/docker-compose.yml

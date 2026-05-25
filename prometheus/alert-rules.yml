@@ -1,0 +1,71 @@
+groups:
+  - name: General Alerts
+    interval: 30s
+    rules:
+      # Prometheus itself not scraping
+      - alert: PrometheusNotScraping
+        expr: time() - prometheus_tsdb_symbol_table_size_bytes > 300
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Prometheus is not scraping correctly"
+          description: "Prometheus has not scraped new data for more than 5 minutes"
+
+      # High disk usage
+      - alert: DiskUsageHigh
+        expr: |
+          (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) < 0.2
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High disk usage on {{ $labels.instance }}"
+          description: "Disk usage is above 80% on {{ $labels.instance }}"
+
+      # High memory usage
+      - alert: MemoryUsageHigh
+        expr: |
+          (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) > 0.85
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage on {{ $labels.instance }}"
+          description: "Memory usage is above 85% on {{ $labels.instance }}"
+
+      # CPU high usage
+      - alert: CPUUsageHigh
+        expr: |
+          (1 - avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) by (instance)) > 0.80
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage on {{ $labels.instance }}"
+          description: "CPU usage is above 80% on {{ $labels.instance }}"
+
+  - name: Container Alerts
+    interval: 30s
+    rules:
+      # Container down
+      - alert: ContainerDown
+        expr: |
+          up{job="docker"} == 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Container {{ $labels.container }} is down"
+          description: "Container {{ $labels.container }} has been down for more than 5 minutes"
+
+      # Container restart frequently
+      - alert: ContainerRestartingFrequently
+        expr: |
+          increase(container_last_seen{status="exited"}[15m]) > 3
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Container {{ $labels.name }} is restarting frequently"
+          description: "Container {{ $labels.name }} has restarted more than 3 times in the last 15 minutes"
