@@ -257,6 +257,67 @@ services:
         ipv4_address: ${ODOO_IP}
     depends_on: []
 
+  # Monitoreo y Backups
+  prometheus:
+    extends:
+      file: ./prometheus/docker-compose.yml
+      service: prometheus
+    networks:
+      temp2010:
+        ipv4_address: ${PROMETHEUS_IP:-192.168.85.50}
+    depends_on: []
+
+  grafana:
+    extends:
+      file: ./grafana/docker-compose.yml
+      service: grafana
+    networks:
+      temp2010:
+        ipv4_address: ${GRAFANA_IP:-192.168.85.51}
+    depends_on:
+      - prometheus
+
+  loki:
+    extends:
+      file: ./loki/docker-compose.yml
+      service: loki
+    networks:
+      temp2010:
+        ipv4_address: ${LOKI_IP:-192.168.85.52}
+    depends_on: []
+
+  promtail:
+    extends:
+      file: ./loki/docker-compose.yml
+      service: promtail
+    networks:
+      temp2010:
+        ipv4_address: ${PROMTAIL_IP:-192.168.85.53}
+    depends_on:
+      - loki
+
+  restic:
+    extends:
+      file: ./restic/docker-compose.yml
+      service: restic
+    networks:
+      temp2010:
+        ipv4_address: ${RESTIC_IP:-192.168.85.54}
+    depends_on: []
+    profiles:
+      - backup
+
+volumes:
+  # Monitoreo y Backups
+  prometheus-data:
+    driver: local
+  grafana-storage:
+    driver: local
+  loki-data:
+    driver: local
+  backup-data:
+    driver: local
+
 networks:
   temp2010:
     external: true
