@@ -47,6 +47,10 @@ backup/*
 !backup/INSTRUCCIONES.txt
 !backup/restore-iptables.sh
 
+# tailscale: excluir datos/estado pero permitir docker-compose
+tailscale/*
+!tailscale/docker-compose.yml
+
 # openclaw: excluir subdirectorios grandes (incluir solo archivos esenciales via reglas específicas más adelante)
 openclaw/*
 !openclaw/docker-compose.yml

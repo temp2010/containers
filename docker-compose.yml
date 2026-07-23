@@ -257,6 +257,13 @@ services:
         ipv4_address: ${ODOO_IP}
     depends_on: []
 
+  # VPN - Tailscale (reemplaza WireGuard)
+  tailscale:
+    extends:
+      file: ./tailscale/docker-compose.yml
+      service: tailscale
+    depends_on: []
+
   # Monitoreo y Backups
   prometheus:
     extends:
