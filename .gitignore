@@ -151,3 +151,25 @@ build/
 
 # rclone: contiene tokens OAuth de las nubes, nunca subir
 /rclone/config/
+
+# Datos de aplicaciones (claves, bases de datos, modelos, configuración local): nunca subir
+/wireguard/config/
+/mitmproxy/mitmproxy/
+/ollama/models/
+/nextcloud/html/
+/stremio/stremio-data/
+/calibre/config/
+/cups/config/
+/driveone/config/
+/plex/config/
+/qbittorrent/config/
+/radarr/config/
+/readarr/config/
+/prowlarr/config/
+/pyLoad/pyload/
+/sonarqube/conf/
+/mattermost/plugins/
+/openclaw/config/
+/openclaw/data/
+/homepage/config/proxmox.yaml
+/nginx/conf.d/default.conf.orig
