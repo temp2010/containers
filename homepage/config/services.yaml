@@ -1,0 +1,179 @@
+- Multimedia:
+    - Jellyfin:
+        href: http://jellyfin.home.arpa/
+        description: Películas y series
+        icon: jellyfin.png
+        server: local
+        container: jellyfin
+    - Plex:
+        href: http://plex.home.arpa/
+        description: Biblioteca multimedia
+        icon: plex.png
+        server: local
+        container: plex
+    - CalibreWeb:
+        href: http://calibreweb.home.arpa/
+        description: Libros
+        icon: calibre-web.png
+    - MeTube:
+        href: http://metube.home.arpa/
+        description: Descargas de video
+        icon: metube.png
+        server: local
+        container: metube
+    - Stremio:
+        href: http://stremio.home.arpa/
+        description: Servidor de streaming
+        icon: mdi-play-network.png
+        server: local
+        container: stremio-server
+
+- Descargas:
+    - qBittorrent:
+        href: http://qbittorrent.home.arpa/
+        description: Cliente de torrents (ISOs de Linux)
+        icon: qbittorrent.png
+        server: local
+        container: qbittorrent
+    - pyLoad:
+        href: http://pyload.home.arpa/
+        description: Gestor de descargas
+        icon: pyload.png
+        server: local
+        container: pyload
+
+- Automatización e IA:
+    - n8n:
+        href: http://n8n.home.arpa
+        description: Automatizaciones
+        icon: n8n.png
+        server: local
+        container: n8n
+    - Home Assistant:
+        href: http://homeassistant.home.arpa/
+        description: Domótica
+        icon: home-assistant.png
+    - Open WebUI:
+        href: http://openwebui.home.arpa/
+        description: Chat con modelos locales
+        icon: open-webui.png
+    - Odoo:
+        href: http://odoo.home.arpa/
+        description: ERP
+        icon: odoo.png
+    - SonarQube:
+        href: http://sonarqube.home.arpa/
+        description: Análisis de código
+        icon: sonarqube.png
+
+- Archivos y oficina:
+    - FileBrowser:
+        href: http://filebrowser.home.arpa/
+        description: Explorador de archivos
+        icon: filebrowser.png
+        server: local
+        container: filebrowser
+    - Nextcloud:
+        href: http://nextcloud.home.arpa/
+        description: Nube personal
+        icon: nextcloud.png
+    - CUPS:
+        href: http://cups.home.arpa/
+        description: Impresoras
+        icon: cups.png
+        server: local
+        container: cups
+
+- Red y administración:
+    - AdGuard Home:
+        href: http://adguardhome.home.arpa
+        description: DNS y bloqueo de anuncios
+        icon: adguard-home.png
+        server: local
+        container: adguardhome
+    - Nginx:
+        href: http://192.168.83.22
+        description: Proxy de los subdominios
+        icon: nginx.png
+        server: local
+        container: nginx
+    - Portainer:
+        href: http://portainer.home.arpa/
+        description: Gestión de contenedores
+        icon: portainer.png
+        server: local
+        container: portainer
+    - WireGuard:
+        href: http://wireguard.home.arpa/
+        description: VPN
+        icon: wireguard.png
+    - mitmproxy:
+        href: http://192.168.83.22:8081
+        description: Proxy de inspección
+        icon: mitmproxy.png
+    - Sunshine:
+        href: https://192.168.83.22:47990
+        description: Escritorio remoto
+        icon: sunshine.png
+
+- Infraestructura:
+    - Tailscale:
+        description: VPN de acceso remoto
+        icon: tailscale.png
+        server: local
+        container: tailscale
+    - Watchtower:
+        description: Avisos de actualizaciones
+        icon: watchtower.png
+        server: local
+        container: watchtower
+    - Postgres:
+        description: Base de datos
+        icon: postgres.png
+        server: local
+        container: postgres
+    - Postgres (wld2cop):
+        description: Base de datos del proyecto wld2cop
+        icon: postgres.png
+        server: local
+        container: postgres-db
+    - Cloudflared:
+        description: Túnel de Cloudflare
+        icon: cloudflare.png
+        server: local
+        container: cloudflared
+    - Samba:
+        description: Carpetas compartidas
+        icon: samba.png
+        server: local
+        container: samba
+    - Rclone:
+        description: Nubes montadas en /mnt
+        icon: rclone.png
+        server: local
+        container: rclone
+    - DHCP:
+        description: Servidor DHCP
+        icon: mdi-lan.png
+        server: local
+        container: dhcp
+
+- Web y bases de datos:
+    - WordPress:
+        href: http://wordpress.home.arpa/
+        description: Sitio web
+        icon: wordpress.png
+    - phpMyAdmin:
+        href: http://phpmyadmin.home.arpa/
+        description: Administración de MySQL
+        icon: phpmyadmin.png
+
+- Dispositivos:
+    - Redmi:
+        href: http://192.168.83.21/
+        description: Dispositivo en la red
+        icon: mdi-cellphone.png
+    - Router Tigo:
+        href: http://192.168.0.254/
+        description: Router del operador
+        icon: mdi-router-network.png

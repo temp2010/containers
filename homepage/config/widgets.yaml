@@ -1,0 +1,11 @@
+- resources:
+    label: Raspberry
+    cpu: true
+    memory: true
+    uptime: true
+    disk: /mnt/hdd
+- datetime:
+    text_size: xl
+    format:
+      timeStyle: short
+      dateStyle: short

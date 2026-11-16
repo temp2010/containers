@@ -1,6 +1,6 @@
 services:
   nginx:
-    image: nginx
+    image: nginx:latest
     container_name: nginx
     hostname: nginx
     restart: unless-stopped

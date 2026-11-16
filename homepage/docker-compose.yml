@@ -1,0 +1,23 @@
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    hostname: homepage
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./config:/app/config
+      # Solo lectura: para mostrar el estado de los contenedores
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      # Solo lectura: para el widget de disco
+      - /mnt/hdd:/mnt/hdd:ro
+    # Grupo docker del host: permite leer el estado de los contenedores (no escribir)
+    group_add:
+      - "984"
+    environment:
+      - TZ=${TZ}
+      - HOMEPAGE_ALLOWED_HOSTS=192.168.83.22:3000,localhost:3000,homepage.home.arpa
+    dns:
+      - ${DNS_PRIMARY}
+      - ${DNS_SECONDARY}

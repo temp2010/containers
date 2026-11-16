@@ -14,7 +14,6 @@ services:
     volumes:
       - ./config:/etc/cups
       - ./spool:/var/spool/cups
-      - /var/run/dbus:/var/run/dbus
     # Variables tomadas de ../.env (ADMIN_USER, ADMIN_PASSWORD, TZ, etc.)
     devices:
       - /dev/bus/usb:/dev/bus/usb

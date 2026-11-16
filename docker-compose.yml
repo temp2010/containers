@@ -53,6 +53,24 @@ services:
       service: wsdd
     depends_on: []
 
+  rclone:
+    extends:
+      file: ./rclone/docker-compose.yml
+      service: rclone
+    depends_on: []
+
+  qbittorrent:
+    extends:
+      file: ./qbittorrent/docker-compose.yml
+      service: qbittorrent
+    depends_on: []
+
+  homepage:
+    extends:
+      file: ./homepage/docker-compose.yml
+      service: homepage
+    depends_on: []
+
   driveone:
     extends:
       file: ./driveone/docker-compose.yml
@@ -63,15 +81,6 @@ services:
     depends_on: []
 
   # Servicios de gestión y dashboard
-  heimdall:
-    extends:
-      file: ./heimdall/docker-compose.yml
-      service: heimdall
-    networks:
-      temp2010:
-        ipv4_address: ${HEIMDALL_IP}
-    depends_on: []
-
   portainer:
     extends:
       file: ./portainer/docker-compose.yml
@@ -117,6 +126,12 @@ services:
     extends:
       file: ./plex/docker-compose.yml
       service: plex
+    depends_on: []
+
+  stremio:
+    extends:
+      file: ./stremio/docker-compose.yml
+      service: stremio
     depends_on: []
 
   #Escritorio remoto
@@ -228,8 +243,7 @@ services:
     networks:
       temp2010:
         ipv4_address: ${N8N_IP}
-    depends_on:
-      - postgres
+    depends_on: []
 
   openclaw-gateway:
     extends:
@@ -263,6 +277,17 @@ services:
       file: ./tailscale/docker-compose.yml
       service: tailscale
     depends_on: []
+
+  # Análisis de Código (PAUSADO - Instalar en Mac, muy pesado para Raspberry)
+  # sonarqube:
+  #   extends:
+  #     file: ./sonarqube/docker-compose.yml
+  #     service: sonarqube
+  #   networks:
+  #     temp2010:
+  #       ipv4_address: ${SONARQUBE_IP:-192.168.85.55}
+  #   depends_on:
+  #     - postgres
 
   # Monitoreo y Backups
   prometheus:

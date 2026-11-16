@@ -1,10 +1,9 @@
 services:
-  rclone-bookworm:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: rclone-bookworm
-    hostname: rclone-bookworm
+  rclone:
+    image: rclone/rclone:latest
+    container_name: rclone
+    hostname: rclone
+    restart: unless-stopped
     cap_add:
       - SYS_ADMIN
     devices:
@@ -12,18 +11,16 @@ services:
     security_opt:
       - apparmor:unconfined
     volumes:
-      - ./config:/root/.config/rclone
-      - /mnt/gdrive/temp2010:/mnt/gdrive/temp2010:shared
-      - /mnt/gdrive/temp2010g:/mnt/gdrive/temp2010g:shared
-      - /mnt/onedrive/temp2010:/mnt/onedrive/temp2010:shared
-      - ./entrypoint.sh:/entrypoint.sh
-      - ./install.sh:/install.sh
+      # Tokens OAuth: excluidos de git en .gitignore
+      - ./config:/config/rclone
+      - ./entrypoint.sh:/entrypoint.sh:ro
+      # /mnt completo con propagación: un montaje sobre la raíz de un bind (p. ej. /mnt/onedrive) no llega al host
+      - /mnt:/mnt:rshared
     dns:
       - ${DNS_PRIMARY}
       - ${DNS_SECONDARY}
-    restart: unless-stopped
     environment:
       - TZ=${TZ}
       - PUID=${PUID}
       - PGID=${PGID}
-    entrypoint: ["/entrypoint.sh"]
+    entrypoint: ["/bin/sh", "/entrypoint.sh"]

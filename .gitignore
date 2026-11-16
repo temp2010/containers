@@ -148,3 +148,6 @@ build/
 !/watchtower/docker-compose.yml
 !/wireguard/docker-compose.yml
 !/wsdd/docker-compose.yml
+
+# rclone: contiene tokens OAuth de las nubes, nunca subir
+/rclone/config/

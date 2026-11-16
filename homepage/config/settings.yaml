@@ -1,0 +1,30 @@
+title: Casa
+theme: dark
+color: slate
+headerStyle: clean
+statusStyle: dot
+layout:
+  Multimedia:
+    style: row
+    columns: 4
+  Descargas:
+    style: row
+    columns: 2
+  Automatización e IA:
+    style: row
+    columns: 3
+  Archivos y oficina:
+    style: row
+    columns: 3
+  Red y administración:
+    style: row
+    columns: 3
+  Web y bases de datos:
+    style: row
+    columns: 2
+  Infraestructura:
+    style: row
+    columns: 4
+  Dispositivos:
+    style: row
+    columns: 2
