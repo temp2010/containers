@@ -173,3 +173,7 @@ build/
 /openclaw/data/
 /homepage/config/proxmox.yaml
 /nginx/conf.d/default.conf.orig
+
+# openclaw es un repositorio anidado (código upstream, 494 MB): solo versionamos su compose
+/openclaw/*
+!/openclaw/docker-compose.yml
