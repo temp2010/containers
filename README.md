@@ -1,426 +1,106 @@
-# 🐳 Docker Containers - Stack Infrastructure as Code
+# Containers — homelab en Raspberry Pi 5
 
-Complete Docker infrastructure configuration for a multi-service homelab/infrastructure setup. This repository contains all necessary configurations to replicate the entire service architecture.
+Configuración de Docker Compose de mi servidor casero (Raspberry Pi 5, arm64, Raspberry Pi OS). Cada servicio vive en su propia carpeta y el archivo `docker-compose.yml` principal los une con `extends`.
 
-## 📋 Servicios Incluidos (44+)
+Repositorio personal y privado. No contiene contraseñas ni claves: esos valores viven en `.env` y en las carpetas de datos, que están excluidas en `.gitignore`.
 
-**Base Infrastructure:**
-- AdGuard Home - DNS filtering and ad blocking
-- DHCP Server - DHCP management
-- Nginx - Reverse proxy and load balancer
-- Samba - File sharing (NAS)
-- Wireguard - VPN
-- CloudFlared - Cloudflare tunnel for remote access
+## Servicios definidos
 
-**Databases & Storage:**
-- PostgreSQL - Relational database
-- MongoDB - NoSQL document database
-- MySQL - Relational database
-- Redis - In-memory cache
-- RClone - Cloud storage sync with custom build
-- File Browser - Web file manager
+La lista sale de `docker-compose.yml`. Que un servicio esté definido no significa que esté corriendo: cada uno se levanta a mano.
 
-**Media & Entertainment:**
-- Jellyfin - Media server
-- Plex - Media streaming service
-- MeTube - YouTube downloader
-- Stremio - Media streaming aggregator
-- Calibre - E-book library
+| Grupo | Servicios |
+|---|---|
+| Red y DNS | AdGuard Home, DHCP, Nginx (proxy de los subdominios `*.home.arpa`), Cloudflared, Tailscale (acceso remoto) |
+| Archivos | File Browser, Samba, Rclone (Google Drive y OneDrive en solo lectura) |
+| Impresión | CUPS (imagen local), WSDD |
+| Multimedia | Jellyfin, Plex, Stremio, MeTube, Pyload, qBittorrent |
+| Automatización | n8n, Home Assistant, Odoo, OpenClaw, Open WebUI + Ollama (IA local) |
+| Panel y administración | Homepage, Portainer, Watchtower (solo avisa), Mitmproxy |
+| Bases de datos | PostgreSQL, phpMyAdmin, WordPress |
+| Monitoreo y respaldo | Prometheus, Grafana, Loki, Promtail, Restic (perfil `backup`) |
+| Escritorio remoto | RustDesk |
 
-**Automation & Integration:**
-- N8N - Workflow automation
-- Portainer - Docker management UI
-- Watchtower - Auto-update Docker images
-- Mattermost - Team collaboration
+Obsoletos: WireGuard (reemplazado por Tailscale; no usar).
 
-**Developer Tools:**
-- PHPMyAdmin - MySQL management
-- Sonarqube - Code quality analysis
-- OpenClaw - AI-powered development assistant
+## Requisitos
 
-**Downloaders & Tools:**
-- qBittorrent - Torrent client
-- Prowlarr - Indexer aggregator
-- Radarr - Movie library manager
-- Readarr - E-book library manager
-- Sonarr - Series library manager
-- PyLoad - Download manager
+- Docker Engine 29 y Docker Compose v2.
+- Raspberry Pi 5 o cualquier equipo arm64 (algunas imágenes son solo amd64; compruébalo antes).
+- Disco con espacio para las imágenes y las carpetas de datos.
 
-**System & Networking:**
-- CUPS - Print server with custom build
-- Ollama - Local LLM with custom build
-- Mitmproxy - HTTP proxy analysis
-- Noip - Dynamic DNS with custom build
-- DuckDNS - Dynamic DNS
-- RustDesk - Remote desktop
-- HomeAssistant - Home automation
-- Avahi - mDNS service discovery
-- WSDD - Windows network discovery
+## Puesta en marcha
 
-## 🚀 Inicio Rápido
+1. Clona el repositorio y crea tu archivo de variables:
 
-### Requisitos
-- Docker Engine 20.10+
-- Docker Compose 2.0+ (recomendado)
-- 50GB+ espacio libre (depende de servicios activos)
-- Raspberry Pi 4+ o similar (for ARM64 support)
-- Git for cloning repository
+   ```bash
+   git clone git@github.com:temp2010/containers.git
+   cd containers
+   cp .env.example .env
+   ```
 
-### Instalación Rápida
+   Edita `.env` con tus valores. Ojo: `.env.example` está desactualizado; las variables reales son las de tu `.env` actual (zona horaria `TZ`, IPs `*_IP`, DNS `DNS_PRIMARY`/`DNS_SECONDARY`, `PUID`/`PGID`).
 
-1. **Clone the repository:**
-```bash
-git clone https://github.com/temp2010/containers.git
-cd containers
-```
+2. Crea la red externa que usan los servicios con IP fija:
 
-2. **Configure environment:**
-```bash
-cp .env.example .env
-nano .env  # Edit with your settings
-```
+   ```bash
+   docker network create --driver bridge --subnet 192.168.85.0/26 temp2010
+   docker network create wordpress
+   ```
 
-3. **Build custom images (if needed):**
-```bash
-# Services with custom Dockerfiles require building:
-docker-compose build rclone cups ollama noip
-```
+3. Construye las imágenes locales:
 
-4. **Start all services:**
-```bash
-docker-compose up -d
-```
+   ```bash
+   docker compose build cups ollama
+   ```
 
-5. **Verify status:**
-```bash
-docker-compose ps
-```
+4. Levanta los servicios **por nombre**. No uses `docker compose up -d` sin nombres: arranca todo lo definido, incluidos servicios que no quieres activos.
 
-## 📁 Repository Structure
+   ```bash
+   docker compose up -d --no-deps adguardhome nginx homepage jellyfin
+   ```
+
+## Estructura
 
 ```
 .
-├── docker-compose.yml       # Main orchestration file
-├── .env.example             # Environment variables template
-├── .gitignore              # Git exclusions (volumes, data, secrets)
-├── README.md               # This file
-├── [service-folders]/      # Individual service configurations
-│   ├── docker-compose.yml  # Service-specific compose file
-│   ├── Dockerfile          # Custom image build (if applicable)
-│   ├── entrypoint.sh       # Startup script (if applicable)
-│   ├── install.sh          # Build helper script (if applicable)
-│   └── .dockerignore       # Docker build context exclusions
-└── volumes/               # Data directory (created at runtime, NOT in git)
-    └── [service-volumes]/ # Persistent data for each service
+├── docker-compose.yml   # Compose principal: une los servicios con extends
+├── .env                 # Variables reales (NO se versiona)
+├── .env.example         # Plantilla de variables
+├── <servicio>/
+│   ├── docker-compose.yml   # Definición del servicio
+│   ├── Dockerfile           # Solo para imágenes locales (cups, ollama)
+│   └── config/ o data/      # Datos del servicio (NO se versionan)
+└── openclaw/            # Repositorio git anidado: se ignora por completo
 ```
 
-## 🛠️ Services with Custom Builds
+Las carpetas de datos (`config/`, `data/`, modelos, bases de datos, claves) están en `.gitignore`. Si una app necesita un archivo que contiene secretos, se crea a mano en la Raspberry y nunca se sube.
 
-The following services use custom Dockerfiles and must be built locally:
+## Operación
 
-| Service | Dockerfile | Custom Scripts | Purpose |
-|---------|-----------|----------------|---------|
-| rclone | ✓ | entrypoint.sh, install.sh | Cloud storage sync client |
-| cups | ✓ | entrypoint.sh | Print server |
-| ollama | ✓ | - | Local LLM runtime |
-| noip | ✓ | - | Dynamic DNS client |
+- **Actualizaciones:** Watchtower revisa cada martes a las 09:00 si hay imágenes nuevas y lo anuncia en sus logs (`docker logs watchtower`). No aplica nada solo: tú decides cuándo recrear cada servicio.
+- **Recrear un servicio con su nueva imagen:**
 
-Build all custom images:
-```bash
-docker-compose build rclone cups ollama noip
-```
+  ```bash
+  docker compose pull <servicio>
+  docker compose up -d --no-deps <servicio>
+  ```
 
-Or build specific service:
-```bash
-docker-compose build rclone
-```
+- **Ver el estado:** `docker compose ps` o el panel de Homepage.
+- **Limpiar espacio:** `docker builder prune` y `docker image prune` son seguros. Evita `docker volume prune` y `docker system prune --volumes` sin revisar antes: pueden borrar datos de contenedores detenidos.
 
-## 🔧 Configuration
+## Seguridad
 
-### Environment Variables
+- `.env`, las carpetas de datos y cualquier archivo con claves permanecen fuera de git.
+- Antes de subir cambios, revisa `git status` y `git diff --cached`.
+- No expongas puertos a internet sin necesidad: el acceso remoto se hace por Tailscale.
 
-Copy `.env.example` to `.env` and customize:
+## Notas
 
-```bash
-# Core settings
-TIMEZONE=America/Bogota
-DOMAIN=example.com
+- Carpetas sin servicio definido en el compose (no se levantan): Nextcloud, Calibre, MongoDB, MySQL, Redis, Mattermost, Avahi. Las conservo como datos; si alguna se vuelve a usar, se añade al compose.
+- `rclone/Dockerfile` ya no se usa: el servicio usa la imagen oficial `rclone/rclone`.
+- `wireguard/` queda solo por historial; su configuración con claves se borró del repositorio.
+- `openclaw/` es un proyecto aparte con su propio repositorio git.
 
-# Database passwords (CHANGE THESE!)
-POSTGRES_PASSWORD=your-secure-password
-MYSQL_PASSWORD=your-secure-password
-MONGO_INITDB_ROOT_PASSWORD=your-secure-password
-
-# Service-specific ports
-PLEX_PORT=32400
-JELLYFIN_PORT=8096
-PORTAINER_PORT=9000
-
-# Advanced settings
-ENABLE_IPVLAN=true
-IPV4_SUBNET=172.18.0.0/24
-```
-
-### Per-Service Configuration
-
-Each service may have additional `.env.example` files in its folder:
-
-```bash
-# OpenClaw configuration
-openclaw/.env.example
-
-# N8N configuration
-n8n/docker-compose.yml
-```
-
-Customize service-specific settings by editing `.env` and referencing variables in service docker-compose files.
-
-### Volume Management
-
-Persistent data is stored in `volumes/` directory (excluded from git):
-
-```bash
-# Create volume directories (optional - docker creates automatically)
-mkdir -p volumes/{postgres,mongodb,jellyfin,nextcloud}
-
-# Backup volumes
-tar -czf backup-volumes.tar.gz volumes/
-
-# Restore volumes
-tar -xzf backup-volumes.tar.gz
-```
-
-## 🚀 Operation
-
-### Start/Stop Services
-
-```bash
-# Start all services
-docker-compose up -d
-
-# Stop all services
-docker-compose down
-
-# Restart specific service
-docker-compose restart jellyfin
-
-# View all containers
-docker-compose ps
-
-# View service logs
-docker-compose logs -f nginx
-
-# View last 100 lines of logs
-docker-compose logs --tail=100 postgres
-```
-
-### Update Services
-
-```bash
-# Pull latest images (without building)
-docker-compose pull
-
-# Rebuild custom images
-docker-compose build --no-cache
-
-# Update and restart
-docker-compose pull && docker-compose up -d
-```
-
-## 📊 Monitoring & Maintenance
-
-### Check Resource Usage
-```bash
-docker stats
-
-# View container details
-docker inspect [container-id]
-```
-
-### Health Checks
-```bash
-# Services with healthchecks
-docker-compose ps
-
-# Manual health test
-curl http://localhost:9000/api/system/status
-```
-
-### Clean Up Resources
-```bash
-# Remove unused images
-docker image prune -a
-
-# Remove stopped containers
-docker container prune
-
-# Clean volumes (⚠️ deletes data)
-docker volume prune
-
-# Full system cleanup (⚠️ careful!)
-docker system prune -a --volumes
-```
-
-## 🔐 Security Best Practices
-
-1. **Change Default Passwords:**
-   - Edit `.env` with strong passwords
-   - Change default credentials for each service
-   - Store .env securely (never commit to git)
-
-2. **Network Security:**
-   - Use firewall to restrict service access
-   - Enable CloudFlared tunnel for remote access only
-   - Use Wireguard VPN for secure connections
-   - Restrict ports to trusted IPs only
-
-3. **Regular Updates:**
-   ```bash
-   # Update all images to latest versions
-   docker-compose pull
-   docker image prune -a
-   docker-compose down && docker-compose up -d
-   ```
-
-4. **Backup Important Data:**
-   ```bash
-   # Backup database volumes
-   docker-compose exec postgres pg_dump -U user database > backup.sql
-   
-   # Backup file volumes
-   tar -czf backup-config.tar.gz volumes/nextcloud volumes/mattermost
-   ```
-
-5. **Secrets Management:**
-   - Keep `.env` out of version control
-   - Use strong random passwords
-   - Rotate credentials periodically
-   - Never commit actual credentials
-
-## 🆘 Troubleshooting
-
-### Common Issues
-
-**Service fails to start:**
-```bash
-# Check logs
-docker-compose logs [service]
-
-# Check resource availability
-docker stats
-
-# Verify configuration
-docker-compose config
-```
-
-**Port already in use:**
-```bash
-# Find process using port
-lsof -i :[PORT]
-
-# Kill process or change port in .env
-```
-
-**Database connection errors:**
-```bash
-# Verify database is running
-docker-compose ps postgres
-
-# Check database logs
-docker-compose logs postgres
-
-# Test connection
-docker-compose exec postgres psql -U user -d database
-```
-
-**Out of disk space:**
-```bash
-# Check disk usage
-du -sh volumes/
-
-# Clean docker
-docker system prune -a
-
-# Remove old backups
-rm -rf old-backups/
-```
-
-### Reset Service
-
-```bash
-# Stop and remove container (keeps volumes)
-docker-compose rm -f [service]
-docker-compose up -d [service]
-
-# Full reset (deletes volumes ⚠️)
-docker-compose down -v
-docker volume prune -f
-docker-compose up -d
-```
-
-## 📝 Important Notes
-
-### What's NOT in This Repository
-
-The following are intentionally excluded (via `.gitignore`):
-
-- **volumes/** - Service data and persistent storage
-- **data/** - Application-generated data  
-- **.env** - Sensitive environment variables
-- **logs/** - Service logs
-- **.git/config** - Repository metadata
-- **node_modules/**, **build/**, **dist/** - Build artifacts
-- **Configuration files** containing passwords
-
-### What IS in This Repository
-
-- `docker-compose.yml` - Service orchestration (updated to latest versions)
-- `[service]/docker-compose.yml` - Individual service configurations
-- `Dockerfile` files - Custom image definitions for specialized services
-- `.env.example` - Configuration template
-- Build scripts - `entrypoint.sh`, `install.sh` for custom builds
-- README files - Documentation and setup guides
-
-### Replicating This Setup
-
-To replicate this infrastructure on another machine:
-
-1. Clone this repository
-2. Create `.env` from `.env.example` with your settings
-3. Build custom images: `docker-compose build`
-4. Start services: `docker-compose up -d`
-5. Configure each service through their web UIs
-6. Restore data from backups if available
-
-Services using official images will pull from Docker Hub. Services with Dockerfiles will build locally.
-
-## 📚 Service Documentation
-
-For service-specific configuration and documentation, refer to:
-
-- Official service documentation (search online for service name)
-- Environment variables in `.env.example`
-- Service docker-compose.yml files
-- Admin panels (usually accessible at `http://localhost:[PORT]`)
-
-## 🔗 Related Projects
-
-- **OpenClaw** - AI development assistant (subproject)
-- **AdGuard Home** - DNS & Ad-blocking
-- **Portainer** - Docker container management
-
-## 📝 Licencia
-
-Privado / Private
-
-## 👤 Autor
+## Autor
 
 temp2010
-
----
-
-**Last Updated:** 2026-05-22  
-**Docker Compose Version:** 2.0+  
-**Services:** 44+  
-**Total Config Files:** 47  
-**Repository:** https://github.com/temp2010/containers.git
